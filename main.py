@@ -70,6 +70,7 @@ def main():
 					score += 1
 				if snake.check_collisions():
 					print(score)
+					pygame.time.wait(300)
 					return
 
 		win.fill(BLACK)
@@ -80,4 +81,4 @@ def main():
 
 
 if __name__ == '__main__':
-	main()
+	while True: main()

@@ -47,6 +47,9 @@ def main():
 			if e.type == pygame.KEYDOWN:
 				if e.key == pygame.K_SPACE:
 					board.generate_board()
+				if e.key == pygame.K_ESCAPE:
+					pygame.quit()
+					quit()
 				if dir_changed == False:
 					dir_changed = True
 					if e.key in right:

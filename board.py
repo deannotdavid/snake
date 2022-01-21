@@ -28,7 +28,6 @@ class Board:
 	def generate_board(self, snake: list[tuple[int, int]]) -> None:
 		self.answer = Square(random.randint(1, BOARD_WIDTH-2), random.randint(1, BOARD_HEIGHT-2))
 		while (self.answer.row, self.answer.column) in snake:
-			print("Oops")
 			self.answer = Square(random.randint(0, BOARD_WIDTH-1), random.randint(0, BOARD_HEIGHT-1))
 
 		self.answer_pos = self.answer.row, self.answer.column

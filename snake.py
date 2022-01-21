@@ -30,12 +30,23 @@ class Snake:
 
 	def check_collisions(self):
 		snake_collision = self.positions.count(self.head) > 1
+		if snake_collision:
+			return True # collision has happened
+
 		lr_collision = self.head[0] < 0 or self.head[0] > BOARD_WIDTH-1
 		ud_collision = self.head[1] < 0 or self.head[1] > BOARD_HEIGHT-1
-		edge_collision = lr_collision or ud_collision
-		if snake_collision or edge_collision:
-			return True # collision has happened
-		return False
+
+		new_pos = None
+		if self.head[0] < 0:
+			new_pos = BOARD_WIDTH - 1, self.head[1]
+		elif self.head[0] > BOARD_WIDTH-1:
+			new_pos = 0, self.head[1]
+		elif self.head[1] < 0:
+			new_pos = self.head[0], BOARD_HEIGHT-1
+		elif self.head[1] > BOARD_HEIGHT - 1:
+			new_pos = self.head[0], 0
+
+		if new_pos: self.positions.append(new_pos)
 
 	def get_rects(self):
 		self.rects = [pygame.Rect(pos[0]*SQUARE_LEN, pos[1]*SQUARE_LEN,

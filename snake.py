@@ -9,7 +9,7 @@ class Snake:
 		self.positions = [(i, 5) for i in range(1,5)]
 		self.get_rects()
 
-	def move(self, apple_pos:tuple[int, int]):
+	def move(self, apple_pos: tuple[int, int]):
 		if self.direction == "right":
 			movement = [1, 0]
 		if self.direction == "left":
@@ -46,7 +46,12 @@ class Snake:
 		elif self.head[1] > BOARD_HEIGHT - 1:
 			new_pos = self.head[0], 0
 
-		if new_pos: self.positions.append(new_pos)
+		if new_pos:
+			self.positions.append(new_pos)
+			del self.positions[0]
+
+	def snake_collision(self) -> bool:
+		return self.positions.count(self.head) > 1
 
 	def get_rects(self):
 		self.rects = [pygame.Rect(pos[0]*SQUARE_LEN, pos[1]*SQUARE_LEN,

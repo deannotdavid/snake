@@ -9,7 +9,7 @@ class Snake:
 		self.positions = [(i, 5) for i in range(1,5)]
 		self.get_rects()
 
-	def move(self, apple_pos: tuple[int, int]):
+	def move(self, apple_pos: tuple[int, int]=None):
 		if self.direction == "right":
 			movement = [1, 0]
 		if self.direction == "left":
@@ -29,29 +29,16 @@ class Snake:
 		self.get_rects()
 
 	def check_collisions(self):
-		snake_collision = self.positions.count(self.head) > 1
-		if snake_collision:
-			return True # collision has happened
-
-		lr_collision = self.head[0] < 0 or self.head[0] > BOARD_WIDTH-1
-		ud_collision = self.head[1] < 0 or self.head[1] > BOARD_HEIGHT-1
-
-		new_pos = None
-		if self.head[0] < 0:
-			new_pos = BOARD_WIDTH - 1, self.head[1]
-		elif self.head[0] > BOARD_WIDTH-1:
-			new_pos = 0, self.head[1]
-		elif self.head[1] < 0:
-			new_pos = self.head[0], BOARD_HEIGHT-1
-		elif self.head[1] > BOARD_HEIGHT - 1:
-			new_pos = self.head[0], 0
-
-		if new_pos:
-			self.positions.append(new_pos)
-			del self.positions[0]
+		return self.snake_collision() or self.edge_collision()
 
 	def snake_collision(self) -> bool:
 		return self.positions.count(self.head) > 1
+
+	def edge_collision(self) -> bool:
+		lr_collision = self.head[0] < 0 or self.head[0] > BOARD_WIDTH-1
+		ud_collision = self.head[1] < 0 or self.head[1] > BOARD_HEIGHT-1
+		edge_collision = lr_collision or ud_collision
+		return edge_collision
 
 	def get_rects(self):
 		self.rects = [pygame.Rect(pos[0]*SQUARE_LEN, pos[1]*SQUARE_LEN,
@@ -71,3 +58,22 @@ class Snake:
 
 		self.direction = direction
 
+class LoopSnake(Snake):
+	def check_collisions(self):
+		snake_collision = self.positions.count(self.head) > 1
+		if snake_collision:
+			return True # collision has happened
+
+		new_pos = None
+		if self.head[0] < 0:
+			new_pos = BOARD_WIDTH - 1, self.head[1]
+		elif self.head[0] > BOARD_WIDTH-1:
+			new_pos = 0, self.head[1]
+		elif self.head[1] < 0:
+			new_pos = self.head[0], BOARD_HEIGHT-1
+		elif self.head[1] > BOARD_HEIGHT - 1:
+			new_pos = self.head[0], 0
+
+		if new_pos:
+			self.positions.append(new_pos)
+			del self.positions[0]

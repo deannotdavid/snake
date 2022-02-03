@@ -16,6 +16,8 @@ class Game:
 		# pygame stuff
 		self.FPS = 60
 		self.win = pygame.display.set_mode((WIDTH, HEIGHT))
+
+		pygame.mouse.set_visible(False)
 		
 		# controls
 		self.right = pygame.K_RIGHT, pygame.K_d
@@ -35,7 +37,8 @@ class Game:
 		top_scores = lb.get_top(10)
 		# adds blank spots if top 10 is not full
 		while len(top_scores) < 10:
-			top_scores.append(('___', 0))
+			top_scores.append(('___', 0, random.choice(["LOOP", "WALLS"])))
+		print(top_scores)
 
 		# gets the center co-ordinates of self.win
 		center_x, center_y = self.win.get_rect().center
@@ -49,8 +52,8 @@ class Game:
 		leaderboard_lines = list()
 		for place, score in enumerate(top_scores):
 			place_str = str(place + 1)
-			name, points = score
-			line = f"{place_str.rjust(2)} {name.center(9)} {str(points).rjust(3, '0')}"
+			name, points, mode = score
+			line = f"{place_str.rjust(2)} {name.center(9)} {str(points).rjust(3, '0')} {mode.rjust(8)}"
 			line_surf = self.body_font.render(line, False, WHITE)
 			line_center = center_x - (line_surf.get_width()/2)
 			y = 97 + (place * 50)

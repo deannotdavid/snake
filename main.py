@@ -1,9 +1,11 @@
 import os
+import time
 import random
 
 import pygame
 
 import leaderboard as lb
+from sfx import sfx
 from utils import *
 from board import Board
 from snake import Snake, LoopSnake
@@ -116,7 +118,9 @@ class Game:
 				if e.type == move_event:
 					snake.change_direction(to_move_dir)
 					dir_changed = False
-					snake.move(board.answer_pos)
+					apple_collision = snake.move(board.answer_pos)
+					if apple_collision:
+						pygame.mixer.Sound.play(sfx["apple"])
 					if snake.head == board.answer_pos:
 						board.generate_board(snake.positions)
 						score += 1
@@ -137,7 +141,7 @@ class Game:
 		clock = pygame.time.Clock()
 		self.win.blit(score_surf, score_rect)
 		pygame.display.update()
-
+		pygame.mixer.Sound.play(sfx["crash"])
 
 		while True:
 			clock.tick(self.FPS)
@@ -153,10 +157,10 @@ class Game:
 def main():
 	pygame.init()
 	g = Game()
-	g.leaderboard()
-	# while True:
-	# 	score = g.play_game()
-	# 	g.game_over(score)
+	# g.leaderboard()
+	while True:
+		score = g.play_game()
+		g.game_over(score)
 
 if __name__ == '__main__':
 	main()

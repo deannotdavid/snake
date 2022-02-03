@@ -9,7 +9,7 @@ class Snake:
 		self.positions = [(i, 5) for i in range(1,5)]
 		self.get_rects()
 
-	def move(self, apple_pos: tuple[int, int]=None):
+	def move(self, apple_pos: tuple[int, int]=None) -> bool:
 		if self.direction == "right":
 			movement = [1, 0]
 		if self.direction == "left":
@@ -24,15 +24,20 @@ class Snake:
 
 		self.head = self.positions[-1]
 		self.positions.append((self.head[0]+movement_x, self.head[-1]+movement_y))
-		if self.head != apple_pos:
+		apple_collision = self.apple_collision(apple_pos)
+		if not apple_collision:
 			del self.positions[0]
 		self.get_rects()
+		return apple_collision
 
 	def check_collisions(self):
 		return self.snake_collision() or self.edge_collision()
 
 	def snake_collision(self) -> bool:
 		return self.positions.count(self.head) > 1
+
+	def apple_collision(self, apple_pos: tuple[int, int]) -> bool:
+		return self.head == apple_pos
 
 	def edge_collision(self) -> bool:
 		lr_collision = self.head[0] < 0 or self.head[0] > BOARD_WIDTH-1
@@ -60,8 +65,7 @@ class Snake:
 
 class LoopSnake(Snake):
 	def check_collisions(self):
-		snake_collision = self.positions.count(self.head) > 1
-		if snake_collision:
+		if self.snake_collision():
 			return True # collision has happened
 
 		new_pos = None
